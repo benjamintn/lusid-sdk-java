@@ -30,7 +30,8 @@ Create a properties file named `secrets.json` in the `src/test/resources` folder
     "password": "",
     "clientId": "",
     "clientSecret": "",
-    "apiUrl": ""
+    "apiUrl": "",
+    "scope": ""
   }
 }
 ```
@@ -43,3 +44,4 @@ Create a properties file named `secrets.json` in the `src/test/resources` folder
 | `clientId` | Okta client identifier |
 | `clientSecret` | Okta client secret |
 | `apiUrl` | API url |
+| `scope` | The scope to use in LUSID |

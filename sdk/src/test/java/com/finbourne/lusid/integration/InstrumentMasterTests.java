@@ -17,6 +17,7 @@ import java.util.stream.Stream;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
+@Ignore
 public class InstrumentMasterTests {
 
     private static final String FIGI_SCHEME = "Figi";
@@ -139,7 +140,7 @@ public class InstrumentMasterTests {
             unique id, in this case an OpenFigi, and also return a list of aliases
          */
 
-        GetInstrumentsResponse lookedUpInstruments = instrumentsApi.getInstruments(FIGI_SCHEME, Arrays.asList("BBG000C6K6G9"),
+        GetInstrumentsResponse lookedUpInstruments = instrumentsApi.getInstruments(FIGI_SCHEME, Collections.singletonList("BBG000C6K6G9"),
                 null, null, Arrays.asList(ISIN_PROPERTY_KEY, SEDOL_PROPERTY_KEY));
 
         assertThat(lookedUpInstruments.getValues(), hasKey("BBG000C6K6G9"));
@@ -185,8 +186,8 @@ public class InstrumentMasterTests {
          */
 
         List<InstrumentMatch> instrumentMatch = searchApi.instrumentsSearch(
-            Arrays.asList(
-                new InstrumentSearchProperty().key(FIGI_PROPERTY_KEY).value("BBG000FV67Q4")),
+                Collections.singletonList(
+                        new InstrumentSearchProperty().key(FIGI_PROPERTY_KEY).value("BBG000FV67Q4")),
             null,
             false);
 

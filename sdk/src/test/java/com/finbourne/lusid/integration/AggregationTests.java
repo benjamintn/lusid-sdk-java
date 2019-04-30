@@ -7,11 +7,10 @@ import com.finbourne.lusid.api.AnalyticsStoresApi;
 import com.finbourne.lusid.api.InstrumentsApi;
 import com.finbourne.lusid.api.TransactionPortfoliosApi;
 import com.finbourne.lusid.model.*;
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
-import java.io.File;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
@@ -20,14 +19,12 @@ import java.util.function.Supplier;
 
 import static org.junit.Assert.assertEquals;
 
+@Ignore
 public class AggregationTests {
 
     private static final String AGGREGATION_KEY = "Holding/default/PV";
     private static final String AGGREGATION_RESULT_KEY = "Sum(Holding/default/PV)";
     private static final String GROUPBY_KEY = "Instrument/default/Name";
-    private static final String INSTRUMENT_KEY = "instrumentId";
-    private static final String PRICE_KEY = "price";
-    private static final String DATE_KEY = "date";
 
     private final OffsetDateTime EFFECTIVE_DATE = OffsetDateTime.of(2018, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC);
 
@@ -37,12 +34,16 @@ public class AggregationTests {
     private static List<String> instrumentIds;
 
     private static TestDataUtilities testDataUtilities;
-    private static InstrumentLoader instrumentLoader;
+
+    private static String scope;
 
     @BeforeClass
     public static void setUp() throws Exception
     {
-        ApiClient apiClient = new ApiClientBuilder("secrets.json").build();
+        ApiClientBuilder apiClientBuilder = new ApiClientBuilder("secrets.json");
+        ApiClient apiClient = apiClientBuilder.build();
+
+        scope = apiClientBuilder.getScope();
 
         testDataUtilities = new TestDataUtilities(transactionPortfoliosApi);
 
@@ -52,13 +53,8 @@ public class AggregationTests {
 
         //  ensure instruments are created and exist in LUSID
         InstrumentsApi instrumentsApi = new InstrumentsApi(apiClient);
-        instrumentLoader = new InstrumentLoader(instrumentsApi);
-        instrumentIds = instrumentLoader.loadInstruments();
-    }
-
-    @AfterClass
-    public static void tearDown() throws ApiException {
-        instrumentLoader.deleteInstruments();
+        InstrumentLoader instrumentLoader = new InstrumentLoader(instrumentsApi);
+        instrumentIds = instrumentLoader.getInstruments();
     }
 
     @Test
@@ -89,13 +85,12 @@ public class AggregationTests {
                 });
     }
 
-    public void run_aggregation(
+    private void run_aggregation(
             Supplier<List<TransactionRequest>> createTransactionRequests,
             Consumer<List<Map<String, Object>>> validateResults
     ) throws ApiException
     {
         String uuid = UUID.randomUUID().toString();
-        String scope = "finbourne";
 
         //  build the create portfolio request
         String originalPortfolioId = String.format("Id-%s", uuid);
@@ -149,7 +144,7 @@ public class AggregationTests {
                         new AggregateSpec().key(AGGREGATION_KEY).op(AggregateSpec.OpEnum.PROPORTION),
                         new AggregateSpec().key(AGGREGATION_KEY).op(AggregateSpec.OpEnum.SUM)
                 ))
-                .groupBy(Arrays.asList(GROUPBY_KEY))
+                .groupBy(Collections.singletonList(GROUPBY_KEY))
                 .effectiveAt(EFFECTIVE_DATE);
 
         //  do the aggregation
@@ -164,7 +159,7 @@ public class AggregationTests {
 
         validateResults.accept(aggregationResponse.getData());
 
-        /**
+        /*
          * The aggregation response contains a schema property which describes the data returned.
          * This includes the aggregated values and description of the types.
          */

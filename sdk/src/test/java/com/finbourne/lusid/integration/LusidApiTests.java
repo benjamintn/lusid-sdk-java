@@ -7,11 +7,9 @@ import com.finbourne.lusid.api.PortfoliosApi;
 import com.finbourne.lusid.api.PropertyDefinitionsApi;
 import com.finbourne.lusid.api.TransactionPortfoliosApi;
 import com.finbourne.lusid.model.*;
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.File;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
@@ -30,31 +28,28 @@ public class LusidApiTests {
     private static TransactionPortfoliosApi transactionPortfoliosApi;
     private static PropertyDefinitionsApi propertyDefinitionsApi;
 
-    private static InstrumentLoader instrumentLoader;
+    private static String scope;
 
     @BeforeClass
     public static void setUp() throws Exception {
 
-        ApiClient apiClient = new ApiClientBuilder("secrets.json").build();
+        ApiClientBuilder apiClientBuilder = new ApiClientBuilder("secrets.json");
+        ApiClient apiClient = apiClientBuilder.build();
+
+        scope = apiClientBuilder.getScope();
 
         portfoliosApi = new PortfoliosApi(apiClient);
         transactionPortfoliosApi = new TransactionPortfoliosApi(apiClient);
         propertyDefinitionsApi = new PropertyDefinitionsApi(apiClient);
 
         InstrumentsApi instrumentsApi = new InstrumentsApi(apiClient);
-        instrumentLoader = new InstrumentLoader(instrumentsApi);
-        instrumentIds = instrumentLoader.loadInstruments();
-    }
-
-    @AfterClass
-    public static void tearDown() throws ApiException {
-        instrumentLoader.deleteInstruments();
+        InstrumentLoader instrumentLoader = new InstrumentLoader(instrumentsApi);
+        instrumentIds = instrumentLoader.getInstruments();
     }
 
     @Test
     public void create_portfolio() throws ApiException {
 
-        final String scope = "finbourne";
         final String uuid = UUID.randomUUID().toString();
 
         final CreateTransactionPortfolioRequest  request = new CreateTransactionPortfolioRequest()
@@ -71,7 +66,6 @@ public class LusidApiTests {
     public void create_portfolio_with_property() throws Exception {
 
         final String uuid = UUID.randomUUID().toString();
-        final String scope = "finbourne";
         final String propertyName = String.format("und-style-%s", uuid);
 
         final CreatePropertyDefinitionRequest propertyDefinition = new CreatePropertyDefinitionRequest()
@@ -81,7 +75,7 @@ public class LusidApiTests {
                 .valueRequired(false)
                 .displayName("Fund Style")
                 .lifeTime(CreatePropertyDefinitionRequest.LifeTimeEnum.PERPETUAL)
-                .dataTypeId(new ResourceId().scope("default").code("string"));;
+                .dataTypeId(new ResourceId().scope("default").code("string"));
 
         //  create property definition
         final PropertyDefinition    propertyDefinitionDto = propertyDefinitionsApi.createPropertyDefinition(propertyDefinition);
@@ -115,7 +109,6 @@ public class LusidApiTests {
     public void create_trade_with_property() throws ApiException{
 
         final String uuid = UUID.randomUUID().toString();
-        final String scope = "finbourne";
         final String propertyName = String.format("traderId-%s", uuid);
         final String propertyValue = "A Trader";
         final OffsetDateTime effectiveDate = OffsetDateTime.of(2018, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC);
@@ -166,7 +159,7 @@ public class LusidApiTests {
                 .properties(properties);
 
         //  add the trade
-        transactionPortfoliosApi.upsertTransactions(scope, portfolioId, new ArrayList<>(Arrays.asList(transaction)));
+        transactionPortfoliosApi.upsertTransactions(scope, portfolioId, new ArrayList<>(Collections.singletonList(transaction)));
 
         //  get the trade
         final VersionedResourceListOfTransaction transactions = transactionPortfoliosApi.getTransactions(scope,
@@ -180,7 +173,6 @@ public class LusidApiTests {
     @Test
     public void apply_bitemporal_portfolio_change() throws Exception
     {
-        final String scope = "finbourne";
         final String uuid = UUID.randomUUID().toString();
         final OffsetDateTime effectiveDate = OffsetDateTime.of(2018, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC);
 
@@ -215,7 +207,7 @@ public class LusidApiTests {
                 return price;
             }
 
-            public OffsetDateTime getTradeDate() {
+            private OffsetDateTime getTradeDate() {
                 return tradeDate;
             }
         }
@@ -269,14 +261,14 @@ public class LusidApiTests {
 
         //  add another trade for 2018-1-8
         TransactionSpec newTrade = new TransactionSpec(instrumentIds.get(3), 104.0, OffsetDateTime.of(2018, 1, 8, 0, 0, 0, 0, ZoneOffset.UTC));
-        UpsertPortfolioTransactionsResponse addedResult = transactionPortfoliosApi.upsertTransactions(scope, portfolioId, Arrays.asList(buildTransaction.apply(newTrade)));
+        UpsertPortfolioTransactionsResponse addedResult = transactionPortfoliosApi.upsertTransactions(scope, portfolioId, Collections.singletonList(buildTransaction.apply(newTrade)));
 
         OffsetDateTime    asAtBatch2 = addedResult.getVersion().getAsAtDate();
         Thread.sleep(500);
 
         //  add back-dated trade
         TransactionSpec backDatedTrade = new TransactionSpec(instrumentIds.get(4), 105.0, OffsetDateTime.of(2018, 1, 5, 0, 0, 0, 0, ZoneOffset.UTC));
-        UpsertPortfolioTransactionsResponse backDatedResult = transactionPortfoliosApi.upsertTransactions(scope, portfolioId, Arrays.asList(buildTransaction.apply(backDatedTrade)));
+        UpsertPortfolioTransactionsResponse backDatedResult = transactionPortfoliosApi.upsertTransactions(scope, portfolioId, Collections.singletonList(buildTransaction.apply(backDatedTrade)));
 
         OffsetDateTime    asAtBatch3 = backDatedResult.getVersion().getAsAtDate();
         Thread.sleep(500);

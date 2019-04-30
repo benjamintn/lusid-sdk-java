@@ -25,9 +25,9 @@ public class ApiClientBuilder {
     private String clientId;
     private String clientSecret;
     private String apiUrl;
+    private String scope;
 
-
-    public ApiClientBuilder(String apiConfig) throws IOException {
+    ApiClientBuilder(String apiConfig) throws IOException {
 
         //  firstly try and get the values from environment variables
         String tokenUrl = System.getenv("FBN_TOKEN_URL");
@@ -36,8 +36,15 @@ public class ApiClientBuilder {
         String clientId = System.getenv("FBN_CLIENT_ID");
         String clientSecret = System.getenv("FBN_CLIENT_SECRET");
         String apiUrl = System.getenv("FBN_LUSID_API_URL");
+        String scope = System.getenv("FBN_SCOPE");
 
-        if (tokenUrl == null || username == null || password == null || clientId == null || clientSecret == null || apiUrl == null) {
+        if (tokenUrl == null ||
+                username == null ||
+                password == null ||
+                clientId == null ||
+                clientSecret == null ||
+                apiUrl == null ||
+                scope == null) {
 
             File configJson = new TestConfigurationLoader().loadConfiguration(apiConfig);
 
@@ -52,14 +59,16 @@ public class ApiClientBuilder {
             clientId = (String)config.get("clientId");
             clientSecret = (String)config.get("clientSecret");
             apiUrl = (String)config.get("apiUrl");
+            scope = (String)config.get("scope");
         }
 
         this.tokenUrl = tokenUrl;
         this.username = username;
         this.password = URLEncoder.encode(password, StandardCharsets.UTF_8.toString());
         this.clientId = clientId;
-        this.clientSecret = URLEncoder.encode(clientSecret, StandardCharsets.UTF_8.toString());;
+        this.clientSecret = URLEncoder.encode(clientSecret, StandardCharsets.UTF_8.toString());
         this.apiUrl = apiUrl;
+        this.scope = scope;
     }
 
     public ApiClient build() throws IOException
@@ -98,5 +107,9 @@ public class ApiClientBuilder {
         apiClient.setBasePath(apiUrl);
 
         return apiClient;
+    }
+
+    public String getScope() {
+        return scope;
     }
 }

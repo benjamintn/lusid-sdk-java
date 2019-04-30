@@ -5,8 +5,8 @@ import com.finbourne.lusid.ApiException;
 import com.finbourne.lusid.api.InstrumentsApi;
 import com.finbourne.lusid.api.TransactionPortfoliosApi;
 import com.finbourne.lusid.model.*;
-import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.time.OffsetDateTime;
@@ -25,29 +25,28 @@ public class TransactionsTests {
     private static List<String> instrumentIds;
     private static InstrumentLoader instrumentLoader;
 
+    private static String scope;
+
     @BeforeClass
     public static void setUp() throws Exception
     {
-        ApiClient apiClient = new ApiClientBuilder("secrets.json").build();
+        ApiClientBuilder apiClientBuilder = new ApiClientBuilder("secrets.json");
+        ApiClient apiClient = apiClientBuilder.build();
+
+        scope = apiClientBuilder.getScope();
 
         transactionPortfoliosApi = new TransactionPortfoliosApi(apiClient);
         instrumentsApi = new InstrumentsApi(apiClient);
 
         //  ensure instruments are created and exist in LUSID
         instrumentLoader = new InstrumentLoader(instrumentsApi);
-        instrumentIds = instrumentLoader.loadInstruments();
-    }
-
-    @AfterClass
-    public static void tearDown() throws ApiException {
-        instrumentLoader.deleteInstruments();
+        instrumentIds = instrumentLoader.getInstruments();
     }
 
     @Test
     public void load_listed_instrument_transaction() throws ApiException
     {
         String uuid = UUID.randomUUID().toString();
-        String scope = "finbourne";
         OffsetDateTime effectiveDate = OffsetDateTime.of(2018, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC);
 
         //  portfolio request
@@ -93,7 +92,6 @@ public class TransactionsTests {
     @Test
     public void load_cash_transaction() throws ApiException {
         String uuid = UUID.randomUUID().toString();
-        String scope = "finbourne";
         OffsetDateTime effectiveDate = OffsetDateTime.of(2018, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC);
 
         //  portfolio request
@@ -137,10 +135,10 @@ public class TransactionsTests {
     }
 
     @Test
+    @Ignore
     public void load_otc_instrument_transaction() throws ApiException
     {
         String uuid = UUID.randomUUID().toString();
-        String scope = "finbourne";
         OffsetDateTime effectiveDate = OffsetDateTime.of(2018, 1, 1, 0, 0, 0, 0, ZoneOffset.UTC);
 
         //  portfolio request
