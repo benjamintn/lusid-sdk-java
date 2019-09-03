@@ -13,9 +13,6 @@
 
 package com.finbourne.lusid.model;
 
-import java.util.Objects;
-import java.util.Arrays;
-import com.finbourne.lusid.model.Link;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
@@ -24,158 +21,40 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.OffsetDateTime;
+import org.junit.Assert;
+import org.junit.Ignore;
+import org.junit.Test;
+
 
 /**
- * The schema of an contributing part of a valid LUSID resource identifier
+ * Model tests for DeleteInstrumentPropertyRequest
  */
-@ApiModel(description = "The schema of an contributing part of a valid LUSID resource identifier")
+public class DeleteInstrumentPropertyRequestTest {
+    private final DeleteInstrumentPropertyRequest model = new DeleteInstrumentPropertyRequest();
 
-public class IdentifierPartSchema {
-  public static final String SERIALIZED_NAME_INDEX = "index";
-  @SerializedName(SERIALIZED_NAME_INDEX)
-  private Integer index;
-
-  public static final String SERIALIZED_NAME_NAME = "name";
-  @SerializedName(SERIALIZED_NAME_NAME)
-  private String name;
-
-  public static final String SERIALIZED_NAME_DISPLAY_NAME = "displayName";
-  @SerializedName(SERIALIZED_NAME_DISPLAY_NAME)
-  private String displayName;
-
-  public static final String SERIALIZED_NAME_DESCRIPTION = "description";
-  @SerializedName(SERIALIZED_NAME_DESCRIPTION)
-  private String description;
-
-  public static final String SERIALIZED_NAME_REQUIRED = "required";
-  @SerializedName(SERIALIZED_NAME_REQUIRED)
-  private Boolean required;
-
-  public static final String SERIALIZED_NAME_LINKS = "links";
-  @SerializedName(SERIALIZED_NAME_LINKS)
-  private List<Link> links = new ArrayList<>();
-
-   /**
-   * The typical index in the identifier in which this part appears
-   * @return index
-  **/
-  @ApiModelProperty(required = true, value = "The typical index in the identifier in which this part appears")
-  public Integer getIndex() {
-    return index;
-  }
-
-   /**
-   * The name of the identifier part that can/should be provided for this resource type
-   * @return name
-  **/
-  @ApiModelProperty(required = true, value = "The name of the identifier part that can/should be provided for this resource type")
-  public String getName() {
-    return name;
-  }
-
-   /**
-   * The display name of the identifier part
-   * @return displayName
-  **/
-  @ApiModelProperty(required = true, value = "The display name of the identifier part")
-  public String getDisplayName() {
-    return displayName;
-  }
-
-   /**
-   * A brief description of the point of this identifier part
-   * @return description
-  **/
-  @ApiModelProperty(required = true, value = "A brief description of the point of this identifier part")
-  public String getDescription() {
-    return description;
-  }
-
-   /**
-   * Whether a value is required to be provided
-   * @return required
-  **/
-  @ApiModelProperty(required = true, value = "Whether a value is required to be provided")
-  public Boolean getRequired() {
-    return required;
-  }
-
-  public IdentifierPartSchema links(List<Link> links) {
-    this.links = links;
-    return this;
-  }
-
-  public IdentifierPartSchema addLinksItem(Link linksItem) {
-    if (this.links == null) {
-      this.links = new ArrayList<>();
+    /**
+     * Model tests for DeleteInstrumentPropertyRequest
+     */
+    @Test
+    public void testDeleteInstrumentPropertyRequest() {
+        // TODO: test DeleteInstrumentPropertyRequest
     }
-    this.links.add(linksItem);
-    return this;
-  }
 
-   /**
-   * Get links
-   * @return links
-  **/
-  @ApiModelProperty(value = "")
-  public List<Link> getLinks() {
-    return links;
-  }
-
-  public void setLinks(List<Link> links) {
-    this.links = links;
-  }
-
-
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
+    /**
+     * Test the property 'instrumentPropertyKey'
+     */
+    @Test
+    public void instrumentPropertyKeyTest() {
+        // TODO: test instrumentPropertyKey
     }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
+
+    /**
+     * Test the property 'effectiveFrom'
+     */
+    @Test
+    public void effectiveFromTest() {
+        // TODO: test effectiveFrom
     }
-    IdentifierPartSchema identifierPartSchema = (IdentifierPartSchema) o;
-    return Objects.equals(this.index, identifierPartSchema.index) &&
-        Objects.equals(this.name, identifierPartSchema.name) &&
-        Objects.equals(this.displayName, identifierPartSchema.displayName) &&
-        Objects.equals(this.description, identifierPartSchema.description) &&
-        Objects.equals(this.required, identifierPartSchema.required) &&
-        Objects.equals(this.links, identifierPartSchema.links);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(index, name, displayName, description, required, links);
-  }
-
-
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class IdentifierPartSchema {\n");
-    sb.append("    index: ").append(toIndentedString(index)).append("\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    displayName: ").append(toIndentedString(displayName)).append("\n");
-    sb.append("    description: ").append(toIndentedString(description)).append("\n");
-    sb.append("    required: ").append(toIndentedString(required)).append("\n");
-    sb.append("    links: ").append(toIndentedString(links)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
 
 }
-

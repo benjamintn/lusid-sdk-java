@@ -15,7 +15,6 @@ package com.finbourne.lusid.model;
 
 import java.util.Objects;
 import java.util.Arrays;
-import com.finbourne.lusid.model.Link;
 import com.google.gson.TypeAdapter;
 import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
@@ -24,108 +23,55 @@ import com.google.gson.stream.JsonWriter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.OffsetDateTime;
 
 /**
- * The schema of an contributing part of a valid LUSID resource identifier
+ * DeleteInstrumentPropertyRequest
  */
-@ApiModel(description = "The schema of an contributing part of a valid LUSID resource identifier")
 
-public class IdentifierPartSchema {
-  public static final String SERIALIZED_NAME_INDEX = "index";
-  @SerializedName(SERIALIZED_NAME_INDEX)
-  private Integer index;
+public class DeleteInstrumentPropertyRequest {
+  public static final String SERIALIZED_NAME_INSTRUMENT_PROPERTY_KEY = "instrumentPropertyKey";
+  @SerializedName(SERIALIZED_NAME_INSTRUMENT_PROPERTY_KEY)
+  private String instrumentPropertyKey;
 
-  public static final String SERIALIZED_NAME_NAME = "name";
-  @SerializedName(SERIALIZED_NAME_NAME)
-  private String name;
+  public static final String SERIALIZED_NAME_EFFECTIVE_FROM = "effectiveFrom";
+  @SerializedName(SERIALIZED_NAME_EFFECTIVE_FROM)
+  private OffsetDateTime effectiveFrom;
 
-  public static final String SERIALIZED_NAME_DISPLAY_NAME = "displayName";
-  @SerializedName(SERIALIZED_NAME_DISPLAY_NAME)
-  private String displayName;
-
-  public static final String SERIALIZED_NAME_DESCRIPTION = "description";
-  @SerializedName(SERIALIZED_NAME_DESCRIPTION)
-  private String description;
-
-  public static final String SERIALIZED_NAME_REQUIRED = "required";
-  @SerializedName(SERIALIZED_NAME_REQUIRED)
-  private Boolean required;
-
-  public static final String SERIALIZED_NAME_LINKS = "links";
-  @SerializedName(SERIALIZED_NAME_LINKS)
-  private List<Link> links = new ArrayList<>();
-
-   /**
-   * The typical index in the identifier in which this part appears
-   * @return index
-  **/
-  @ApiModelProperty(required = true, value = "The typical index in the identifier in which this part appears")
-  public Integer getIndex() {
-    return index;
-  }
-
-   /**
-   * The name of the identifier part that can/should be provided for this resource type
-   * @return name
-  **/
-  @ApiModelProperty(required = true, value = "The name of the identifier part that can/should be provided for this resource type")
-  public String getName() {
-    return name;
-  }
-
-   /**
-   * The display name of the identifier part
-   * @return displayName
-  **/
-  @ApiModelProperty(required = true, value = "The display name of the identifier part")
-  public String getDisplayName() {
-    return displayName;
-  }
-
-   /**
-   * A brief description of the point of this identifier part
-   * @return description
-  **/
-  @ApiModelProperty(required = true, value = "A brief description of the point of this identifier part")
-  public String getDescription() {
-    return description;
-  }
-
-   /**
-   * Whether a value is required to be provided
-   * @return required
-  **/
-  @ApiModelProperty(required = true, value = "Whether a value is required to be provided")
-  public Boolean getRequired() {
-    return required;
-  }
-
-  public IdentifierPartSchema links(List<Link> links) {
-    this.links = links;
-    return this;
-  }
-
-  public IdentifierPartSchema addLinksItem(Link linksItem) {
-    if (this.links == null) {
-      this.links = new ArrayList<>();
-    }
-    this.links.add(linksItem);
+  public DeleteInstrumentPropertyRequest instrumentPropertyKey(String instrumentPropertyKey) {
+    this.instrumentPropertyKey = instrumentPropertyKey;
     return this;
   }
 
    /**
-   * Get links
-   * @return links
+   * The key of the property to be removed from the instrument. This takes the format {domain}/{scope}/{code} e.g. &#39;Instrument/CreditScope/CreditRating&#39;.
+   * @return instrumentPropertyKey
   **/
-  @ApiModelProperty(value = "")
-  public List<Link> getLinks() {
-    return links;
+  @ApiModelProperty(value = "The key of the property to be removed from the instrument. This takes the format {domain}/{scope}/{code} e.g. 'Instrument/CreditScope/CreditRating'.")
+  public String getInstrumentPropertyKey() {
+    return instrumentPropertyKey;
   }
 
-  public void setLinks(List<Link> links) {
-    this.links = links;
+  public void setInstrumentPropertyKey(String instrumentPropertyKey) {
+    this.instrumentPropertyKey = instrumentPropertyKey;
+  }
+
+  public DeleteInstrumentPropertyRequest effectiveFrom(OffsetDateTime effectiveFrom) {
+    this.effectiveFrom = effectiveFrom;
+    return this;
+  }
+
+   /**
+   * The effective datetime from which the property should be removed. Defaults to the current LUSID system datetime if not specified.
+   * @return effectiveFrom
+  **/
+  @ApiModelProperty(value = "The effective datetime from which the property should be removed. Defaults to the current LUSID system datetime if not specified.")
+  public OffsetDateTime getEffectiveFrom() {
+    return effectiveFrom;
+  }
+
+  public void setEffectiveFrom(OffsetDateTime effectiveFrom) {
+    this.effectiveFrom = effectiveFrom;
   }
 
 
@@ -137,31 +83,23 @@ public class IdentifierPartSchema {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    IdentifierPartSchema identifierPartSchema = (IdentifierPartSchema) o;
-    return Objects.equals(this.index, identifierPartSchema.index) &&
-        Objects.equals(this.name, identifierPartSchema.name) &&
-        Objects.equals(this.displayName, identifierPartSchema.displayName) &&
-        Objects.equals(this.description, identifierPartSchema.description) &&
-        Objects.equals(this.required, identifierPartSchema.required) &&
-        Objects.equals(this.links, identifierPartSchema.links);
+    DeleteInstrumentPropertyRequest deleteInstrumentPropertyRequest = (DeleteInstrumentPropertyRequest) o;
+    return Objects.equals(this.instrumentPropertyKey, deleteInstrumentPropertyRequest.instrumentPropertyKey) &&
+        Objects.equals(this.effectiveFrom, deleteInstrumentPropertyRequest.effectiveFrom);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(index, name, displayName, description, required, links);
+    return Objects.hash(instrumentPropertyKey, effectiveFrom);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class IdentifierPartSchema {\n");
-    sb.append("    index: ").append(toIndentedString(index)).append("\n");
-    sb.append("    name: ").append(toIndentedString(name)).append("\n");
-    sb.append("    displayName: ").append(toIndentedString(displayName)).append("\n");
-    sb.append("    description: ").append(toIndentedString(description)).append("\n");
-    sb.append("    required: ").append(toIndentedString(required)).append("\n");
-    sb.append("    links: ").append(toIndentedString(links)).append("\n");
+    sb.append("class DeleteInstrumentPropertyRequest {\n");
+    sb.append("    instrumentPropertyKey: ").append(toIndentedString(instrumentPropertyKey)).append("\n");
+    sb.append("    effectiveFrom: ").append(toIndentedString(effectiveFrom)).append("\n");
     sb.append("}");
     return sb.toString();
   }

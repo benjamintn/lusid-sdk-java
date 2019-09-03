@@ -206,21 +206,22 @@ public class Instruments {
 
     @Test
     public void edit_instrument_property() throws ApiException {
-        String figi = "BBG000C6K6G9";
 
         //  Create the property value
         PropertyValue   propertyValue = new PropertyValue().labelValue("Telecoms");
         String propertyKey = String.format("Instrument/%s/CustomSector", TutorialScope);
 
+        //  Get the LusidInstrumentId (LUID)
+        Instrument instrument = instrumentsApi.getInstrument("Figi", "BBG000C6K6G9", null, null, null);
+
         //    Add it to the instrument
         instrumentsApi.upsertInstrumentsProperties(Collections.singletonList(new UpsertInstrumentPropertyRequest()
-                .identifierType(FIGI_SCHEME)
-                .identifier(figi)
+                .lusidInstrumentId(instrument.getLusidInstrumentId())
                 .properties(Collections.singletonList(new Property().key(propertyKey).value(propertyValue)))));
 
-        Instrument instrument = instrumentsApi.getInstrument(
-                FIGI_SCHEME,
-                figi,
+        instrument = instrumentsApi.getInstrument(
+                "LusidInstrumentId",
+                instrument.getLusidInstrumentId(),
                 null, null,
                 Collections.singletonList(propertyKey)
         );
